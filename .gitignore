@@ -1,0 +1,18 @@
+# Dev tools / IDEs
+.vscode/
+.idea/
+
+# Vendors & builds
+dist/
+node_modules/
+
+# Projects spcific
+hot-reload.tmp.ts
+packages/api/.env
+packages/tests/.env
+/.env
+
+# Other
+.DS_STORE
+.idea
+__snapshots__

@@ -1,0 +1,242 @@
+openapi: 3.0.3
+
+servers:
+  - url: https://api.schema1st.com/
+    description: Production Server
+  - url: //localhost:3000/
+    description: Local Development server
+
+info:
+  description: |
+    Welcome to the Schema1st API documentation. This API provides access to the Schema1st platform, allowing you to manage your API documentation and design in a single place.
+
+  version: 0.0.1
+  title: Schema1st API
+  termsOfService: 'https://schema1st.com/terms'
+  contact:
+    name: Support
+    email: alex@gavazov.net
+    url: https://gavazov.net
+  x-logo:
+    url: 'https://schema1st.com/schema.svg'
+    altText: Schema1st
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+paths:
+  # Basic Paths
+  /:
+    get:
+      tags:
+        - basicPaths
+      summary: Home
+      description: |
+        Project home page
+      responses:
+        200:
+          description: HTML response providing the home page
+          content:
+            text/html:
+              schema:
+                type: string
+  /ping:
+    get:
+      tags:
+        - basicPaths
+      summary: Ping
+      description: |
+        Ping then pong!
+      responses:
+        '200':
+          description: The response to the ping request
+          content:
+            text/json:
+              schema:
+                type: object
+                properties:
+                  ping:
+                    type: string
+                    maxLength: 2
+                example:
+                  ping: pong
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Docs paths
+  /docs:
+    get:
+      tags:
+        - docs
+      summary: Redoc UI
+      description: |
+        Read the API documentation with Redoc UI
+      responses:
+        200:
+          description: HTML response providing Redoc UI
+          content:
+            text/html:
+              schema:
+                type: string
+  /docs/swagger:
+    get:
+      tags:
+        - docs
+      summary: Swagger UI
+      description: |
+        Read the API documentation with Swagger UI
+      responses:
+        200:
+          description: HTML response providing Swagger UI
+          content:
+            text/html:
+              schema:
+                type: string
+  /docs/schema:
+    get:
+      tags:
+        - docs
+      summary: OpenAPI schema of the entire service
+      description: |
+        Download the complete OpenAPI schema, providing a machine-readable blueprint of the API's available endpoints, request/response types, and operational settings
+      responses:
+        200:
+          description: Open API Schema
+          content:
+            text/yaml:
+              schema:
+                type: object
+
+  # Pets CRUD
+  /pets:
+    get:
+      tags:
+        - pets
+      summary: List
+      description: |
+        Returns all pets from the app
+      responses:
+        '200':
+          description: A list of pets
+          content:
+            text/json:
+              schema:
+                type: object
+                properties:
+                  pets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - pets
+      summary: Create
+      description: |
+        Add a new pet to the app
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - dog
+                    - cat
+              required:
+                - name
+                - type
+              example:
+                name: Muffy
+                type: dog
+      responses:
+        '200':
+          description: A single pet
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /pets/{id}:
+    get:
+      tags:
+        - pets
+      summary: Read
+      description: |
+        Returns a single pet
+      responses:
+        '200':
+          description: A single pet
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - dog
+            - cat
+      required:
+        - id
+        - name
+        - type
+      example:
+        id: 1
+        name: Fido
+        type: dog
+    Error:
+      additionalProperties: true
+tags:
+  - name: basicPaths
+    description: Basic paths
+  - name: docs
+    description: OpenAPI documentation endpoints
+  - name: pets
+    description: Pets operations
+
+x-tagGroups:
+  - name: Basic Paths
+    tags:
+      - basicPaths
+  - name: Docs
+    tags:
+      - docs
+  - name: Pets
+    tags:
+      - pets

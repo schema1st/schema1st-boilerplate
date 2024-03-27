@@ -1,0 +1,28 @@
+{
+  "name": "schema1st-monorepo",
+  "description": "Monorepo",
+  "version": "0.0.1",
+  "author": "Alexander Gavazov",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://schema1st.com/",
+  "workspaces": [
+    "./packages/*"
+  ],
+  "scripts": {
+    "start:api": "npm --prefix packages/api run start:dev",
+    "start": "concurrently \"npm:start:dev-*\"",
+    "test": "npm --prefix ./packages/tests run test",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts,.js --fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-config-prettier": "^9.1.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1"
+  }
+}
